@@ -21,15 +21,15 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `id`          smallint(8)  NOT NULL AUTO_INCREMENT COMMENT '管理员编号',
-  `name`        char(25)     NOT NULL  COMMENT '管理员名称',
-  `pwd`         char(32)     NOT NULL  COMMENT '密码',
-  `salt`        char(32)     NOT NULL  COMMENT '加密后缀',
-  `sex`         tinyint(1)   DEFAULT 1  COMMENT '性别 0未知1男2女',
+  `name`        char(25)     NOT NULL    COMMENT '管理员名称',
+  `pwd`         char(32)     NOT NULL    COMMENT '密码',
+  `salt`        char(32)     NOT NULL    COMMENT '加密后缀',
+  `sex`         tinyint(1)   DEFAULT 1   COMMENT '性别 0未知1男2女',
   `mobile`      char(11)     DEFAULT ''  COMMENT '手机',
-  `login_count` smallint(8)  DEFAULT 0  COMMENT '登陆次数',
+  `login_count` smallint(8)  DEFAULT 0   COMMENT '登陆次数',
   `last_time`   datetime     DEFAULT '0000-00-00 00:00:00'  COMMENT '最后一次登录时间',
   `last_ip`     char(15)     DEFAULT ''  COMMENT '最后一次登录ip',
-  `is_use`      tinyint(1)   DEFAULT 1  COMMENT '是否启用',
+  `is_use`      tinyint(1)   DEFAULT 1   COMMENT '是否启用',
   `ad_time`     datetime     DEFAULT '0000-00-00 00:00:00'  COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理员表';
@@ -44,11 +44,11 @@ CREATE TABLE `admin` (
 DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner` (
   `ban_id`      smallint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT 'banner编号',
-  `type`        smallint(8)  DEFAULT ''  COMMENT '类型 1首页banner 2首页楼层banner 3其他banner',
-  `title`       smallint(8)  DEFAULT ''  COMMENT '标题',
-  `img_url`     smallint(8)  DEFAULT ''  COMMENT '图片地址',
-  `sort`        smallint(8)  DEFAULT ''  COMMENT '排序',
-  `link_url`    smallint(8)  DEFAULT ''  COMMENT '链接地址',
+  `type`        tinyint(1)     DEFAULT 1   COMMENT '类型 1首页banner 2首页楼层banner 3其他banner',
+  `title`       varchar(255)   DEFAULT ''  COMMENT '标题',
+  `img_url`     varchar(100)   DEFAULT ''  COMMENT '图片地址',
+  `sort`        smallint(4)    DEFAULT 0  COMMENT '排序',
+  `link_url`    varchar(100)   DEFAULT ''  COMMENT '链接地址',
   PRIMARY KEY (`ban_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='banner表';
 
@@ -65,7 +65,7 @@ CREATE TABLE `collect` (
   `user_id`     smallint(8)  NOT NULL  COMMENT '用户编号',
   `pro_id`      smallint(8)  NOT NULL  COMMENT '商品编号',
   `is_use`      tinyint(1)   DEFAULT 1  COMMENT '是否收藏 1收藏 0取消',
-  `ad_time`     datetime     NOT NULL  COMMENT '添加时间',
+  `ad_time`     datetime     DEFAULT '0000-00-00 00:00:00'  COMMENT '添加时间',
   PRIMARY KEY (`collect_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品收藏表';
 
@@ -117,11 +117,11 @@ CREATE TABLE `config` (
 DROP TABLE IF EXISTS `consume_log`;
 CREATE TABLE `consume_log` (
   `log_id`    smallint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '日志id',
-  `order_no`  char(20)  DEFAULT '' COMMENT '订单',
-  `user_id`   char(20)  NOT NULL COMMENT '用户',
-  `type`      char(20)  NOT NULL COMMENT '消费类型 1购买2充值',
-  `money`     float(20) DEFAULT 0 COMMENT '金额',
-  `adtime`    datetime  NOT NULL COMMENT '添加时间',
+  `order_no`  char(20)    DEFAULT '' COMMENT '订单',
+  `user_id`   smallint(8) NOT NULL COMMENT '用户',
+  `type`      tinyint(1)  NOT NULL COMMENT '消费类型 1购买2充值',
+  `money`     float(20)   DEFAULT 0 COMMENT '金额',
+  `adtime`    datetime    NOT NULL COMMENT '添加时间',
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户消费记录表';
 
@@ -183,16 +183,16 @@ CREATE TABLE `product` (
   `pro_id`      smallint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品编号',
   `title`       varchar(255)  DEFAULT ''  COMMENT '商品标题',
   `desc`        text          DEFAULT ''  COMMENT '商品简介',
-  `price`       float(20)     DEFAULT ''  COMMENT '价格',
+  `price`       float(20)     DEFAULT 0  COMMENT '价格',
   `count`       smallint(8)   DEFAULT 0  COMMENT '库存',
   `sell_count`  smallint(8)   DEFAULT 0  COMMENT '已售数量',
   `is_hot`      tinyint(1)    DEFAULT 0  COMMENT '是否热卖',
   `is_favor`    tinyint(1)    DEFAULT 0  COMMENT '是否优惠',
   `is_discount` tinyint(1)    DEFAULT 0  COMMENT '是否特价',
-  `discount_price` float(8)   NOT NULL  COMMENT '特价价格',
-  `discount_btime` datetime   NOT NULL  COMMENT '特价开始时间',
-  `discount_etime` datetime   NOT NULL  COMMENT '特价截止时间',
-  `discount`    float(5)      DEFAULT 10  COMMENT '特价折扣',
+  `discount_price` float(8)   DEFAULT 0  COMMENT '特价价格',
+  `discount_btime` datetime   DEFAULT '0000-00-00 00:00:00'  COMMENT '特价开始时间',
+  `discount_etime` datetime   DEFAULT '0000-00-00 00:00:00'  COMMENT '特价截止时间',
+  `discount`    float(3)      DEFAULT 10  COMMENT '特价折扣',
   `is_up`       tinyint(1)    DEFAULT 1  COMMENT '是否上架',
   `pro_img`     varchar(255)  DEFAULT ''  COMMENT '展示图片',
   `ad_time`     datetime      DEFAULT '0000-00-00 00:00:00'  COMMENT '添加时间',
@@ -212,6 +212,7 @@ CREATE TABLE `pro_desc_img` (
   `pro_id`      smallint(8)  NOT NULL COMMENT '商品编号',
   `img_url`     varchar(255) NOT NULL COMMENT '商品图片地址',
   `is_use`      tinyint(1)   DEFAULT 1 COMMENT '是否启用',
+  `ad_time`     datetime     DEFAULT '0000-00-00 00:00:00' COMMENT '是否启用',
   PRIMARY KEY (`img_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品描述表';
 
@@ -239,8 +240,8 @@ DROP TABLE IF EXISTS `pro_order`;
 CREATE TABLE `pro_order` (
   `order_id`    smallint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单编号',
   `order_no`    char(25)     NOT NULL COMMENT '订单单号',
-  `user_id`     char(25)     NOT NULL COMMENT '用户编号',
-  `pro_id`      char(25)     NOT NULL COMMENT '商品编号',
+  `user_id`     smallint(8)  NOT NULL COMMENT '用户编号',
+  `pro_id`      smallint(8)  NOT NULL COMMENT '商品编号',
   `money`       float(20)    DEFAULT 0 COMMENT '总金额',
   `ad_time`     datetime     DEFAULT '0000-00-00 00:00:00' COMMENT '下单时间',
   `is_pay`      tinyint(1)   DEFAULT 0 COMMENT '是否支付',
@@ -278,11 +279,11 @@ CREATE TABLE `shipping_address` (
   `user_id`     smallint(8)  NOT NULL COMMENT '用户id',
   `name`        char(25)     NOT NULL COMMENT '姓名',
   `mobile`      smallint(8)  NOT NULL COMMENT '电话',
-  `province`    int(4)       DEFAULT '' COMMENT '省',
-  `city`        int(4)       DEFAULT '' COMMENT '市',
-  `district`    int(4)       DEFAULT '' COMMENT '区',
-  `address`     varchar(255) DEFAULT '' COMMENT '地址',
-  `zipcode`     smallint(8)  DEFAULT '' COMMENT '邮编',
+  `province`    int(4)       NOT NULL COMMENT '省',
+  `city`        int(4)       NOT NULL COMMENT '市',
+  `district`    int(4)       NOT NULL COMMENT '区',
+  `address`     varchar(100) DEFAULT '' COMMENT '地址',
+  `zipcode`     smallint(8)  NOT NULL COMMENT '邮编',
   PRIMARY KEY (`add_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收货地址表';
 
@@ -316,14 +317,14 @@ CREATE TABLE `user` (
   `mobile`      char(11)     DEFAULT '' COMMENT '手机号',
   `pwd`         char(32)     DEFAULT '' COMMENT '密码',
   `pay_pwd`     char(32)     DEFAULT '' COMMENT '支付密码',
-  `salt`        smallint(4)  DEFAULT '' COMMENT '加密后缀',
+  `salt`        smallint(4)  DEFAULT 0000 COMMENT '加密后缀',
   `sex`         tinyint(1)   DEFAULT 0 COMMENT '性别 1男2女0未知',
-  `province`    int(4)       DEFAULT '' COMMENT '省',
-  `city`        int(4)       DEFAULT '' COMMENT '市',
-  `district`    int(4)       DEFAULT '' COMMENT '区',
+  `province`    int(4)       DEFAULT 0 COMMENT '省',
+  `city`        int(4)       DEFAULT 0 COMMENT '市',
+  `district`    int(4)       DEFAULT 0 COMMENT '区',
   `address`     varchar(255) DEFAULT '' COMMENT '地址',
   `user_img`    varchar(255) DEFAULT '' COMMENT '头像',
-  `level`       char(20)     DEFAULT 1 COMMENT '会员等级',
+  `level`       char(20)     DEFAULT '普通会员' COMMENT '会员等级',
   `money`       float(20)    DEFAULT 0 COMMENT '余额',
   `integral`    smallint(8)  DEFAULT 0 COMMENT '积分',
   `ad_time`     datetime     DEFAULT '0000-00-00 00:00:00' COMMENT '注册时间',
